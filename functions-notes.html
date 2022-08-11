@@ -370,7 +370,8 @@ pre code {
 </div>
 
 
-<p>Nested for loop examples</p>
+<div id="nested-for-loop-examples" class="section level3">
+<h3>Nested for loop examples</h3>
 <pre class="r"><code>file_prefix &lt;- c(&quot;temp&quot;, &quot;ph&quot;, &quot;salinity&quot;)
 file_suffix &lt;- c(1, 2, 3, 4, 5)
 
@@ -420,9 +421,78 @@ for (i in seq_along(odds)) {
 ## [1] 20
 ## [1] 30
 ## [1] 40</code></pre>
-<p>###Functions</p>
+</div>
+<div id="functions" class="section level1">
+<h1>Functions</h1>
 <p>functions are self-contained bits of code that accept user input(s),
 do something with it, and return a useful output</p>
+<p>consider using a function when you find yourself copying and pasting
+a bit of code more than twice</p>
+<p><strong>Benefits of writing functions</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>you can give a function a usefule and readable name</p></li>
+<li><p>As requirements change, you only need to update code in one place
+instead of many</p></li>
+<li><p>You eliminated the chance of making incidental mistakes when you
+copy and paste</p></li>
+</ol>
+<p>Minimizing lines of code makes it easier to read and troubleshoot</p>
+<p>Functions will look like:</p>
+<p>function_name &lt;- function (bird, dog) { pets = bird + dog
+return(pets) }</p>
+<p>start by naming function, then specify arguments within the
+function() function, then specify what to do with arguments within
+{}</p>
+<p>In python, use def function_name to name function, followed by
+arguments (argument 1, argument 2): what to do,</p>
+<pre class="r"><code>#Example
+
+exclaim_age &lt;- function(age) {
+  print(paste(&quot;I am&quot;, age, &quot;years old!&quot;))
+}
+
+exclaim_age(age = 25)</code></pre>
+<pre><code>## [1] &quot;I am 25 years old!&quot;</code></pre>
+<pre class="r"><code>exclaim_age(&quot;four&quot;)</code></pre>
+<pre><code>## [1] &quot;I am four years old!&quot;</code></pre>
+<pre class="r"><code>##this function will take numeric or string, QUESTION: how would I specify that I want my function to only take one class of data</code></pre>
+<p><strong>Naming functions</strong></p>
+<ul>
+<li><p>Name of the function is important, it’s better to be clear than
+concise when you have to make the trade-off</p></li>
+<li><p>generally, function names should be verbs, and arguments should
+be nouns</p>
+<ul>
+<li><p>however, a noun could be the right choice when accessing
+properties, such as “mean” “coefficient,” , etc.</p></li>
+<li><p>if you’re using nouns like “get”, “compute”, or “calculate” then
+a noun could be better</p></li>
+</ul></li>
+<li><p>function name should make it clear what it’s doing</p></li>
+</ul>
+<div id="function-practice" class="section level2">
+<h2>Function Practice</h2>
+<p>Example: you run two miles and these are your quarter mile splits in
+minutes - write a for loop that returns total time for any two
+consecutive quarter mile splits</p>
+<pre class="r"><code>quarter_splits &lt;- c(1.0, 1.1, 1.2, 1.1, 1.4, 1.5, 1.6, 1.4)
+
+for (i in seq_along(quarter_splits)) {
+  half_split &lt;- quarter_splits[i] + quarter_splits[i + 1]
+  print(half_split)
+}</code></pre>
+<pre><code>## [1] 2.1
+## [1] 2.3
+## [1] 2.3
+## [1] 2.5
+## [1] 2.9
+## [1] 3.1
+## [1] 3
+## [1] NA</code></pre>
+<p><strong>Functions with conditions</strong> can create a function with
+conditional statements</p>
+</div>
+</div>
 
 
 

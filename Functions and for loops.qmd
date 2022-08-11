@@ -1,0 +1,29 @@
+---
+title: "Functions and For Loops"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+## Functions and for Loops
+
+```{r}
+means_over_columns <- function(df) {
+  for (i in seq_along(df)) {
+    col_mean <- mean(df[[i]], na.rm = TRUE)
+    column_name <- colnames(df[i])
+    print(paste("The mean value of", column_name, "is", col_mean))
+  }
+}
+
+
+means_over_columns(df = mtcars)
+```
+```{r}
+means_over_columns(faithful)
+```
+

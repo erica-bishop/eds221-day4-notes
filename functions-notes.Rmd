@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 ### Nested for loop examples
@@ -99,4 +100,121 @@ exclaim_age("four")
 -   function name should make it clear what it's doing
 
 ## Function Practice
+
+Example: you run two miles and these are your quarter mile splits in minutes - write a for loop that returns total time for any two consecutive quarter mile splits
+
+```{r}
+
+quarter_splits <- c(1.0, 1.1, 1.2, 1.1, 1.4, 1.5, 1.6, 1.4)
+
+for (i in seq_along(quarter_splits)) {
+  half_split <- quarter_splits[i] + quarter_splits[i + 1]
+  print(half_split)
+}
+
+
+```
+
+**Functions with conditions**
+
+can create a function with conditional statements
+
+*Example: create a function that doubles the input*
+
+```{r}
+double_this <- function(my_value) {
+  print(2 * my_value)
+}
+```
+
+*now use the function*
+
+```{r}
+double_this(200)
+
+double_this("value")
+##error with non-numeric argument to binary operator
+
+#but can use on a vector:
+
+double_this(c(1, 2, 3, 4, 5))
+
+```
+
+*Example: write a function that asks for the users name and age and returns an exclamation
+
+```{r}
+
+age_name_exclaim <- function(name, age) {
+  print(paste("My name is", name, "and I'm", age, "years old!"))
+}
+
+age_name_exclaim("Erica", 25)
+
+##don't have to spell out arguments, but helps to be explicit when reading code back:
+
+age_name_exclaim(name = "Teddy", age = 4)
+
+```
+
+Another example: 
+
+```{r}
+calc_animal_age <- function(animal, age_hyrs) {
+  if (animal == "dog") {
+    print(age_hyrs * 7)
+  } else if (animal == "goat") {
+    print(age_hyrs * 4.7)
+  } else { print("Error: only converts dog or goat ages")}
+}
+
+calc_animal_age("Dog", 2)
+
+calc_animal_age("Goat", 3)
+
+calc_animal_age("horse", 21)
+##silent error with invalid argument
+
+```
+
+
+Another example:
+
+```{r}
+
+dog_name <- c("Teddy", "Waffle", "Banjo")
+dog_food <- c("salmon", "pancakes", "chicken")
+
+dog_choice <- tribble(
+  ~dog_name, ~dog_food,
+  "Teddy", "salmon",
+  "Waffle", "pancakes",
+  "Banjo", "chicken"
+)
+
+##now make a function:
+
+dog_menu <- function(name) {
+  my_sub <- filter(dog_choice, dog_name == name)
+  print(paste("My name is", my_sub$dog_name, "and my favorite food is", my_sub$dog_food))
+}
+
+dog_menu(name = "Waffle")
+#now this function will return data frame with only the row called by dog name
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
