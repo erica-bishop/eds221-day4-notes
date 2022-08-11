@@ -1,0 +1,102 @@
+---
+title: "Day 4 notes - functions"
+author: "Erica Bishop"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Nested for loop examples
+
+```{r}
+
+file_prefix <- c("temp", "ph", "salinity")
+file_suffix <- c(1, 2, 3, 4, 5)
+
+for (i in seq_along(file_prefix)) {
+  for (j in seq_along(file_suffix)) {
+    print(paste0(file_prefix[i], "_", file_suffix[j]))
+  }
+}
+
+##paste automatically includes a space, paste0 concatenates without spaces
+# inner for loop is evaluated first fully (i = 1, and j evaluates fully through to get i1,j1; i1,j2; i1,j3...etc. before moving on to i=2, j1, i2,j3... etc.)
+
+#number f
+
+```
+
+Another example:
+
+At each
+
+```{r}
+
+odds <- c(1, 3, 5)
+evens <- c(2, 4, 6, 8)
+
+for (i in seq_along(odds)) {
+  for (j in seq_along(evens)) {
+    print(odds[i] * evens[j])
+  }
+}
+
+
+```
+
+# Functions
+
+functions are self-contained bits of code that accept user input(s), do something with it, and return a useful output
+
+consider using a function when you find yourself copying and pasting a bit of code more than twice
+
+**Benefits of writing functions**
+
+1.  you can give a function a usefule and readable name
+
+2.  As requirements change, you only need to update code in one place instead of many
+
+3.  You eliminated the chance of making incidental mistakes when you copy and paste
+
+Minimizing lines of code makes it easier to read and troubleshoot
+
+Functions will look like:
+
+function_name \<- function (bird, dog) { pets = bird + dog return(pets) }
+
+start by naming function, then specify arguments within the function() function, then specify what to do with arguments within {}
+
+In python, use def function_name to name function, followed by arguments (argument 1, argument 2): what to do,
+
+```{r}
+#Example
+
+exclaim_age <- function(age) {
+  print(paste("I am", age, "years old!"))
+}
+
+exclaim_age(age = 25)
+
+exclaim_age("four")
+
+##this function will take numeric or string, QUESTION: how would I specify that I want my function to only take one class of data
+
+```
+
+**Naming functions**
+
+-   Name of the function is important, it's better to be clear than concise when you have to make the trade-off
+
+-   generally, function names should be verbs, and arguments should be nouns
+
+    -   however, a noun could be the right choice when accessing properties, such as "mean" "coefficient," , etc.
+
+    -   if you're using nouns like "get", "compute", or "calculate" then a noun could be better
+
+-   function name should make it clear what it's doing
+
+## Function Practice
+
