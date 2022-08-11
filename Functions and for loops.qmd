@@ -8,7 +8,6 @@ editor: visual
 library(tidyverse)
 ```
 
-
 ## Functions and for Loops
 
 ```{r}
@@ -23,7 +22,248 @@ means_over_columns <- function(df) {
 
 means_over_columns(df = mtcars)
 ```
+
 ```{r}
 means_over_columns(faithful)
 ```
+
+Another example with a matrix:
+
+```{r}
+apples <- c(1, 2, 3, 4)
+price <- c(7, 10, 25)
+
+fruit_out <- matrix(nrow = length(price), ncol = length(apples))
+
+for (i in seq_along(apples)) {
+  for (j in seq_along(price)) {
+    total_cost <- price[j] * apples[i]
+    fruit_out[j, i] <- total_cost
+  }
+}
+
+total_cost
+
+fruit_out
+
+#fruit_out populates j in the rows, while outer loop stays constant until that row is populated
+
+```
+
+Now try to create your own nested for loop
+
+```{r}
+length_box <- c(2, 4, 7, 9)
+width_box <- c(5, 8, 9, 10)
+
+area <- matrix(nrow = length(length_box), ncol = length(width_box))
+
+for (i in seq_along(length_box)) {
+  for (j in seq_along(width_box)) {
+    size <- length_box[i] * width_box[j]
+    area[i, j] <- size
+  }
+}
+
+area
+
+
+```
+
+Another example with characters:
+
+```{r}
+clothing <- c("shirt", "pants", "shoes")
+color <- c("purple", "red", "blue", "white")
+
+our_clothes <- matrix(nrow = length(color), ncol = length(clothing))
+
+for (i in seq_along(clothing)) {
+  for (j in seq_along(color)) {
+    clothing_details <- paste(color[j], clothing[i])
+    our_clothes[j, i] <- clothing_details
+  }
+}
+
+our_clothes
+
+#get a 'subscript out of bounds' error if switch indecies because matrix is then wrong size...so be careful with two vectors of same size because can easily switch rows and column values without noticing
+
+```
+
+## Notes on methods for developing functions and coding in general
+
+**When developing functions**
+
+-   Have a clear goal
+-   Make a plan and map it out
+-   Build it up bit-by-bit - which gets more important as things get more complex - starting with a minimum viable example
+-   Check intermediates
+
+**Example: modeling logistic population growth** *Starting point / goal:* automate estimating population size over a range of times and at multiple growth rates for a constant initial population and carrying capacity. *Next: plan an pseudocode* - create an empty matrix and store - then write a nested for loop, for i in sequence of growth rates, and then for j in sequence of times, calculate logistic function for i over all j, then store that calculation in the matrix created.
+
+Will need to write a function for logistic growth, and make sure it works
+
+*shortcut to note* if you type in righthand side of a function can ue cmd+opt+x to name the function (or on a pc use ctrl + alt + x)
+
+```{r}
+function_shortcut_test <- function(oranges, rainbows) {
+  (oranges * rainbows / 2.4)^2
+}
+
+```
+
+```{r}
+#exp() raises e to the specified argument power
+
+logistic_growth <- function(K, N0, r, time) {
+  K / (1 + ((K-N0)/N0) * exp(-r * time))
+}
+
+#now test to make sure the function does indeed work on its own
+logistic_growth(K = 5000, N0 = 100, r = 0.07, time = 42)
+
+
+#now add a time vector
+time_vec <- seq(from = 0, to = 35, by = 0.1)
+
+```
+
+```{r}
+
+pop_35 <- logistic_growth(N0 = 1, K = 1000, r = 0.5, time = time_vec)
+
+#now combine into a data frame in order to plot
+
+pop_time35_df <- data.frame(time_vec, pop_35)
+
+#make a gg plot
+
+ggplot(data = pop_time35_df,
+       aes(x = time_vec,
+           y = pop_35)) +
+  geom_point()
+
+
+```
+
+```{r}
+
+pop_35_vec <- vector(mode = "numeric", length = length(time_vec))
+
+for (i in seq_along(time_vec)) {
+  population <- logistic_growth(N0 = 100, K = 6000, r = 0.27, time = time_vec[i])
+  pop_35_vec[i] <- population
+}
+
+population
+
+```
+
+The above formula iterates over time for one growth rate, now we can extend this to iterate over multiple growth rates too
+
+```{r}
+
+#make new sequence of growth rate values (outer for loop)
+
+r_seq <- seq(from = 0.1, to = 1.0, by = 0.1)
+
+#now create matrix structure
+
+out_matrix <- matrix(nrow = length(time_vec), ncol = length(r_seq))
+
+#when writing for loop, start with outermost iteration
+
+for (i in seq_along(r_seq)) {
+  for (j in seq_along(time_vec)) {
+    pop <- logistic_growth(K = 6000, N0 = 100, r = r_seq[i], time = time_vec[j])
+    out_matrix[j, i] <- pop
+  }
+}
+
+#check out-matrix ouput in the console
+
+```
+
+Now plot it! But time won't show up in matrix so need to wrangle data a bit into an apropriat data frame
+
+```{r}
+
+logistic_df <- data.frame(out_matrix, time = time_vec)
+
+#now we have a new column with time showing up
+#but default column headings are X1, X2, etc....
+#so make column names more descriptive, gr_(value from r_seq) - so update column names:
+
+colnames(logistic_df) <- c(paste0("gr_", r_seq), "time") #adding "time" gives right number of column names
+
+logistic_df_long <- logistic_df |> 
+  pivot_longer(cols = -time,
+               values_to = "population",
+               names_to = "growth_rate")
+
+#-time specifies to keep every column except for time
+```
+
+```{r}
+
+ggplot(data = logistic_df_long,
+       aes(x = time,
+           y = population)) +
+  geom_line(aes(color = growth_rate))
+
+
+```
+
+### Adding warnings and error messages
+
+Use `warning` to add a warning
+
+use `stop` to add an error
+
+$$ 0.3 * \rho A v^3 $$
+rho: Air density (kg/m^3)
+A: area covered by turbine (m^2)
+v: wind velocity (m/s)
+
+```{r}
+
+calc_wind_power <- function(rho, radius, windspeed) {
+  
+  if (windspeed > 130) {
+    warning("Whoa, that's really fast. Are you sure?")
+  }
+  if (rho > 1.225) {
+    warning("That air density is suspicious.")
+  }
+  if (radius < 0) {
+    stop("rotor radius must be a positive value in meters")
+  }
+  
+  0.3*rho*pi*(radius^2)*(windspeed^3)
+}
+
+#check that function works
+
+calc_wind_power(1.225, 20, 35)
+
+```
+
+Now test out error messages:
+
+```{r}
+
+calc_wind_power(rho = 3.2, radius = 5, windspeed = 15)
+
+
+
+```
+
+
+
+
+
+
+
+
 
